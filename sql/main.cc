@@ -26,8 +26,9 @@
   Calls mysqld_main() entry point exported by sql library.
 */
 extern int mysqld_main(int argc, char **argv);
-
+#include "mylogger.h"
 int main(int argc, char **argv)
 {
+    log("hello world..................");
   return mysqld_main(argc, argv);
 }
