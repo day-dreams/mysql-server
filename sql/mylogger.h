@@ -2,16 +2,16 @@
 // Created by kakaxi on 2020/9/23.
 //
 
-#ifndef MYSQL_MYLOGGER_H
-#define MYSQL_MYLOGGER_H
+#ifndef MYLOGGER
+#define MYLOGGER
 
-#include <iostream>
-#include<fstream>
+#include <string>
 
-std::ofstream f("/home/kakaxi/Desktop/mysql.log", std::ios::out | std::ios::app);
 
-void log(std::string msg) {
-    f << msg << std::endl;
+#define kakaxi(msg) detail::print(msg,__FILE__,__LINE__);
+
+namespace detail {
+    void print(std::string msg, std::string file, int line);
 }
 
-#endif //MYSQL_MYLOGGER_H
+#endif
