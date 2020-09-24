@@ -2366,6 +2366,10 @@ static inline void binlog_gtid_end_transaction(THD *thd) {
   @retval
     TRUE        Error
 */
+#include "mylogger.h"
+#include <string>
+
+using std::string;
 
 int
 mysql_execute_command(THD *thd, bool first_level) {
@@ -2418,6 +2422,15 @@ mysql_execute_command(THD *thd, bool first_level) {
     all_tables = lex->query_tables;
     /* set context for commands which do not use setup_tables */
     select_lex->context.resolve_in_table_list_only(select_lex->get_table_list());
+
+    {
+        string tables("tables:\t");
+        TABLE_LIST *table_list = all_tables;
+        for (; table_list != NULL; table_list = table_list->next_global) {
+            tables += string(table_list->table_name);
+        }
+        kakaxi(tables);
+    }
 
     thd->get_stmt_da()->reset_diagnostics_area();
     if ((thd->lex->keep_diagnostics != DA_KEEP_PARSE_ERROR) &&
@@ -5143,9 +5156,12 @@ void mysql_init_multi_delete(LEX *lex) {
                                the next query in the query text.
 */
 #include "mylogger.h"
+#include <string>
+
+using namespace std;
 
 void mysql_parse(THD *thd, Parser_state *parser_state) {
-    kakaxi("mysql_parse");
+    kakaxi(string("mysql_parse called. query:") + string(thd->query().str));
     int error
     MY_ATTRIBUTE((unused));
     DBUG_ENTER("mysql_parse");
